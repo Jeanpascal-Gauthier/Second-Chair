@@ -1,0 +1,10 @@
+# Large local assets, never committed
+/data/
+/soundfonts/
+/renders/
+
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
