@@ -7,7 +7,7 @@ seconds; the Grid turns those seconds into bars and positions.
 from __future__ import annotations
 
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from symusic import Note as SymusicNote
 from symusic import Score, Track
@@ -29,6 +29,16 @@ class Note:
     @property
     def duration(self) -> float:
         return self.end - self.start
+
+
+def cut_overlaps(line: Sequence[Note]) -> list[Note]:
+    """One voice: end each note no later than the next one starts (`line` ordered by start)."""
+    return [replace(n, end=min(n.end, nxt.start)) for n, nxt in zip(line, line[1:])] + list(line[-1:])
+
+
+def playable(notes: Sequence[Note]) -> list[Note]:
+    """Notes MIDI can hold: those ending by time 0 dropped, the rest starting no earlier than 0."""
+    return [replace(n, start=max(n.start, 0.0)) for n in notes if n.end > 0]
 
 
 def track_notes(score: Score, name: str) -> list[Note]:

@@ -6,7 +6,7 @@ import pytest
 from symusic import Note as SymusicNote
 from symusic import Score, Tempo, Track
 
-from secondchair.notes import Note, to_track, track_notes
+from secondchair.notes import Note, cut_overlaps, playable, to_track, track_notes
 
 
 def tick_score(tracks: dict[str, list[tuple[int, int, int, int]]], qpm: float = 120.0) -> Score:
@@ -74,3 +74,14 @@ def test_to_track_round_trips_through_midi(tmp_path: Path) -> None:
         assert (got.pitch, got.velocity) == (want.pitch, want.velocity)
         assert got.start == pytest.approx(want.start, abs=0.002)
         assert got.end == pytest.approx(want.end, abs=0.002)
+
+
+def test_cut_overlaps_ends_each_note_at_the_next_onset() -> None:
+    line = [Note(0.0, 2.0, 36, 80), Note(1.0, 1.5, 40, 80), Note(3.0, 4.0, 43, 80)]
+    assert cut_overlaps(line) == [Note(0.0, 1.0, 36, 80), Note(1.0, 1.5, 40, 80), Note(3.0, 4.0, 43, 80)]
+    assert cut_overlaps([]) == []
+
+
+def test_playable_drops_or_trims_notes_before_time_zero() -> None:
+    notes = [Note(-1.0, -0.5, 36, 80), Note(-0.5, 0.5, 38, 80), Note(1.0, 2.0, 40, 80)]
+    assert playable(notes) == [Note(0.0, 0.5, 38, 80), Note(1.0, 2.0, 40, 80)]

@@ -64,6 +64,18 @@ Training uses PyTorch's CUDA 13.0 build (configured in `pyproject.toml`) and wri
 `runs/<name>/` with checkpoints (`best.pt`, `last.pt`), `log.csv` and `loss.png`. Run
 `--help` for model and optimizer settings.
 
+## Generating
+
+```sh
+uv run python -m secondchair.generate runs/baseline/best.pt --song 010
+uv run python -m secondchair.generate runs/baseline/best.pt --all-test   # scores only
+```
+
+Feeds a song's real chords to the model bar by bar and lets it write the bass. Writes
+`renders/generated/<run>/<song>/` with `original.wav`, `generated.wav` / `target.wav` (model bass and
+the extracted bass, each with the arrangement), `*_solo.wav` and `tokens.txt`. `--temperature 0`
+always plays the most likely note; higher values add variety.
+
 ## Tests
 
 ```sh

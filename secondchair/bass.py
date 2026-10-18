@@ -24,14 +24,14 @@ from __future__ import annotations
 
 import argparse
 from collections.abc import Callable, Iterable, Sequence
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from pathlib import Path
 
 from symusic import Score
 
 from secondchair.chords import NO_CHORD, ChordSegment, merge_repeats, read_chord_midi
 from secondchair.grid import Grid
-from secondchair.notes import Note, to_track, track_notes
+from secondchair.notes import Note, cut_overlaps, to_track, track_notes
 from secondchair.pop909 import pop909_root, read_index, song_dir
 from secondchair.render import render
 
@@ -107,7 +107,7 @@ class LowestAtChordChange:
             note, on = min(sounding, key=lambda item: (item[0].pitch, item[1] != step))
             start = note.start if on == step else seg.start
             line.append(Note(start, seg.end, note.pitch, note.velocity))
-        return _cut_overlaps(line)
+        return cut_overlaps(line)
 
 
 def make_strategy(
@@ -150,12 +150,7 @@ def _one_voice(grid: Grid, notes: Iterable[Note]) -> list[Note]:
         best = chosen.get(step)
         if best is None or (n.pitch, -n.duration) < (best.pitch, -best.duration):
             chosen[step] = n
-    return _cut_overlaps([chosen[step] for step in sorted(chosen)])
-
-
-def _cut_overlaps(line: Sequence[Note]) -> list[Note]:
-    """End each note no later than the next one starts; `line` must be ordered by start."""
-    return [replace(n, end=min(n.end, nxt.start)) for n, nxt in zip(line, line[1:])] + list(line[-1:])
+    return cut_overlaps([chosen[step] for step in sorted(chosen)])
 
 
 # --------------------------------------------------------------------------- listening
