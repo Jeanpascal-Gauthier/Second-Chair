@@ -164,9 +164,13 @@ class Grid:
         return bisect_right(d, step // r) - 1
 
     # ------------------------------------------------------------------ public mapping
+    def step_at(self, seconds: float) -> int:
+        """Nearest grid step to `seconds` (= beat index * beat_res); halfway rounds later."""
+        return math.floor(self.beat_at(seconds) * self.beat_res + 0.5)
+
     def quantize(self, seconds: float) -> tuple[int, int]:
         """Nearest grid point to `seconds` as (bar, position); halfway rounds later."""
-        step = math.floor(self.beat_at(seconds) * self.beat_res + 0.5)
+        step = self.step_at(seconds)
         bar = self.bar_at_step(step)
         return bar, step - self.bar_start_beat(bar) * self.beat_res
 

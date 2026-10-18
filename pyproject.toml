@@ -8,6 +8,7 @@ dependencies = [
     "matplotlib",
     "miditok",  # reference oracle only; secondchair has its own tokenizer
     "numpy",
+    "openpyxl>=3.1.5",
     "pandas",
     "symusic",
 ]

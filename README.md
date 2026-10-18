@@ -29,6 +29,29 @@ uv run python -m secondchair.render data/POP909/001/001.mid renders/001.wav
 or `secondchair.render.render(midi_path, out_path)` from Python. Output is peak-normalized to
 -1 dBFS so renders compare at equal loudness (`--no-normalize` to disable).
 
+## Comparing bass extraction strategies
+
+POP909 has no bass track, so the bassline is derived from the piano (`secondchair.bass`):
+
+```sh
+uv run python -m secondchair.bass 001
+```
+
+writes `renders/001/` with `original.wav` and, per strategy (`lowest`, `threshold`, `chord`), the
+bass with the arrangement (`<strategy>.wav`) and alone (`<strategy>_solo.wav`), plus the MIDI files.
+
+## Tokens
+
+`secondchair.tokenizer.RemiTokenizer` turns a bassline and its chords into REMI tokens, bar by bar:
+
+```
+Bar Position_0 Chord_B:maj Pitch_47 Velocity_4 Duration_8 Position_8 Chord_C#:maj Pitch_49 Velocity_6 Duration_8
+```
+
+Positions and durations count grid steps (16ths by default) from the bar's downbeat. Chords are
+reduced to 12 roots × major/minor plus `N`, every bar restates the chord in effect, and held notes
+are restruck at each barline.
+
 ## Tests
 
 ```sh

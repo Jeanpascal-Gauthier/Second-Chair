@@ -136,6 +136,13 @@ def test_rounding_to_nearest_step(drift: Grid) -> None:
     assert drift.quantize(start + 0.5 * step) == (0, 1)  # halfway rounds later
 
 
+def test_step_at_counts_positions_from_the_first_beat(drift: Grid) -> None:
+    assert drift.step_at(DRIFT_TIMES[5]) == 20
+    for t in (-0.7, 0.0, 1.3, 3.85, 8.8, 9.9):
+        bar, position = drift.quantize(t)
+        assert drift.step_at(t) == drift.bar_start_beat(bar) * drift.beat_res + position
+
+
 def test_note_just_before_barline_belongs_to_next_bar(drift: Grid) -> None:
     assert drift.quantize(DRIFT_TIMES[7] - 0.01) == (1, 0)
 
