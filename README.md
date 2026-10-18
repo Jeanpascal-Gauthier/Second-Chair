@@ -87,6 +87,16 @@ its chords (major/minor, per beat), has the model write a bassline over them and
 `renders/audio/<file name>/` with `mix.wav`, `bass.wav`, `bass.mid` (chords as markers),
 `analysis.txt` (tempo, meter, chords per bar) and `tokens.txt`. `--bass-db` sets the bass level.
 
+## Safer guesses
+
+```sh
+uv run python -m secondchair.safety runs/baseline/best.pt --split test
+```
+
+Live, the bass must sound before the new chord is heard. `secondchair.safety` picks the note that
+fits the model's likely chords best on average (`safest_pitch_class`) instead of the root of its
+single best guess, and prints a scorecard comparing the two.
+
 ## Tests
 
 ```sh
