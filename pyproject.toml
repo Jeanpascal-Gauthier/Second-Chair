@@ -5,6 +5,8 @@ description = "Real-time AI bass accompanist: symbolic bassline generation from 
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "beat-this>=1.1.0",
+    "librosa>=1.0.0",
     "matplotlib",
     "miditok",  # reference oracle only; secondchair has its own tokenizer
     "numpy",

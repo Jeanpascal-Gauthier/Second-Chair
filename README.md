@@ -76,6 +76,17 @@ Feeds a song's real chords to the model bar by bar and lets it write the bass. W
 the extracted bass, each with the arrangement), `*_solo.wav` and `tokens.txt`. `--temperature 0`
 always plays the most likely note; higher values add variety.
 
+## From an audio file
+
+```sh
+uv run python -m secondchair.from_audio song.mp3
+```
+
+Tracks the recording's beats and downbeats (beat_this; its weights download on first use), recognizes
+its chords (major/minor, per beat), has the model write a bassline over them and mixes it in. Writes
+`renders/audio/<file name>/` with `mix.wav`, `bass.wav`, `bass.mid` (chords as markers),
+`analysis.txt` (tempo, meter, chords per bar) and `tokens.txt`. `--bass-db` sets the bass level.
+
 ## Tests
 
 ```sh
