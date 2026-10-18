@@ -11,10 +11,20 @@ dependencies = [
     "openpyxl>=3.1.5",
     "pandas",
     "symusic",
+    "torch>=2.14",
 ]
 
 [dependency-groups]
 dev = ["pytest"]
+
+# CUDA build of PyTorch (RTX 50-series needs CUDA 12.8+) from PyTorch's own index; torch only.
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu130", marker = "sys_platform == 'win32' or sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
 
 [build-system]
 requires = ["uv_build>=0.13.1,<0.14.0"]

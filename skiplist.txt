@@ -1,0 +1,2 @@
+# POP909 songs left out of the dataset, one per line: <song id> <reason>
+# `uv run python -m secondchair.dataset sweep` lists songs that fail; add them here with a reason.

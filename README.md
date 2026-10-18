@@ -52,6 +52,18 @@ Positions and durations count grid steps (16ths by default) from the bar's downb
 reduced to 12 roots × major/minor plus `N`, every bar restates the chord in effect, and held notes
 are restruck at each barline.
 
+## Dataset and training
+
+```sh
+uv run python -m secondchair.dataset build      # POP909 -> data/tokens/pop909.jsonl
+uv run python -m secondchair.dataset sweep      # round-trip check + reports/onset_error_p95.png
+uv run python -m secondchair.train --name baseline
+```
+
+Training uses PyTorch's CUDA 13.0 build (configured in `pyproject.toml`) and writes
+`runs/<name>/` with checkpoints (`best.pt`, `last.pt`), `log.csv` and `loss.png`. Run
+`--help` for model and optimizer settings.
+
 ## Tests
 
 ```sh
